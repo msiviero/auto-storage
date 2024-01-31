@@ -1,0 +1,4 @@
+github.com/dave/jennifer v1.7.0 h1:uRbSBH9UTS64yXbh4FrMHfgfY762RD+C7bUPKODpSJE=
+github.com/dave/jennifer v1.7.0/go.mod h1:nXbxhEmQfOZhWml3D1cDK5M1FLnMSozpbFN/m3RmGZc=
+github.com/yoheimuta/go-protoparser v3.4.0+incompatible h1:FdE033NnKLsvJFpfcy7eH9Rzl1k9f88HDmu9anoTsyY=
+github.com/yoheimuta/go-protoparser v3.4.0+incompatible/go.mod h1:NMMDARGayMyLM9oD1JUgKyF1Tv7aj9S+KcTG4lqvemo=
