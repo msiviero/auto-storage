@@ -30,21 +30,15 @@ func NewCodeGen(packageName string) CodeGen {
 	return CodeGen{file: f}
 }
 
-func (gen *CodeGen) GenConfigInterface(definition MessageDef) {
-	gen.file.Type().Id(fmt.Sprintf("%sStoreConfig", definition.Name)).Interface(
-		j.Id("Path").Params().String(),
-	).Line()
-}
-
 func (gen *CodeGen) GenCtorFunction(definition MessageDef) {
 	gen.file.Func().
 		Id(fmt.Sprintf("New%sStore", definition.Name)).
-		Params(j.Id("config").Id(fmt.Sprintf("%sStoreConfig", definition.Name))).
+		Params(j.Id("path").String()).
 		Id(fmt.Sprintf("%sStore", definition.Name)).
 		Block(
 			j.Id("name").Op(":=").Qual("fmt", "Sprintf").Call(
 				j.Lit("%s/%s"),
-				j.Id("config").Dot("Path").Call(),
+				j.Id("path"),
 				j.Lit(strings.ToLower(definition.Name)),
 			),
 			j.List(j.Id("db"), j.Err()).Op(":=").Qual("github.com/cockroachdb/pebble", "Open").

@@ -26,13 +26,13 @@ func main() {
 			codeGen := NewCodeGen(pkg)
 
 			for _, message := range parseResult.Messages {
-				codeGen.GenConfigInterface(message)
 				codeGen.GenCtorFunction(message)
 				codeGen.GenStoreStruct(message)
 				codeGen.GenerateGetFunction(message)
 				codeGen.GenerateSetFunction(message)
 				codeGen.GenerateDelFunction(message)
 				codeGen.GenerateListFunction(message)
+				codeGen.GenerateIterateFunction(message)
 			}
 			err := codeGen.file.Save(fmt.Sprintf("%s/%s", parseResult.Pkg, strings.ToLower(strings.ReplaceAll(file.Name(), ".proto", "_storage.g.go"))))
 
