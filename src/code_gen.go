@@ -34,7 +34,7 @@ func (gen *CodeGen) GenCtorFunction(definition MessageDef) {
 	gen.file.Func().
 		Id(fmt.Sprintf("New%sStore", definition.Name)).
 		Params(j.Id("path").String()).
-		Id(fmt.Sprintf("%sStoreInterface", definition.Name)).
+		Id(fmt.Sprintf("%sStore", definition.Name)).
 		Block(
 			j.Id("name").Op(":=").Qual("fmt", "Sprintf").Call(
 				j.Lit("%s/%s"),
