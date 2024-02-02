@@ -34,7 +34,7 @@ func (gen *CodeGen) GenCtorFunction(definition MessageDef) {
 	gen.file.Func().
 		Id(fmt.Sprintf("New%sStore", definition.Name)).
 		Params(j.Id("path").String()).
-		Id(fmt.Sprintf("%sStore", definition.Name)).
+		Id(fmt.Sprintf("%sStoreInterface", definition.Name)).
 		Block(
 			j.Id("name").Op(":=").Qual("fmt", "Sprintf").Call(
 				j.Lit("%s/%s"),
@@ -50,7 +50,7 @@ func (gen *CodeGen) GenCtorFunction(definition MessageDef) {
 				j.Qual("log", "Fatal").Call(j.Id("err")),
 			),
 			j.Return().
-				Id(fmt.Sprintf("%sStore", definition.Name)).Values(j.Dict{j.Id("db"): j.Id("db")}),
+				Op("&").Id(fmt.Sprintf("%sStore", definition.Name)).Values(j.Dict{j.Id("db"): j.Id("db")}),
 		).Line()
 }
 
@@ -71,6 +71,19 @@ func (gen *CodeGen) GenerateDataStruct(definition MessageDef) {
 func (gen *CodeGen) GenStoreStruct(definition MessageDef) {
 	gen.file.Type().Id(fmt.Sprintf("%sStore", definition.Name)).Struct(
 		j.Id("db").Id("*pebble.DB"),
+	).Line()
+}
+
+func (gen *CodeGen) GenStoreIterface(definition MessageDef) {
+	gen.file.Type().Id(fmt.Sprintf("%sStoreInterface", definition.Name)).Interface(
+		j.Id("Get").Params(j.Op("*").Id(definition.Name)).Params(
+			j.Op("*").Id(definition.Name),
+			j.Error(),
+		),
+		j.Id("Set").Params(j.Op("*").Id(definition.Name)).Error(),
+		j.Id("Delete").Params(j.Op("*").Id(definition.Name)).Error(),
+		j.Id("List").Params().Params(j.Op("[]").Op("*").Id(definition.Name), j.Error()),
+		j.Id("Iterate").Params(j.Func().Params(j.Op("*").Id(definition.Name))).Error(),
 	).Line()
 }
 

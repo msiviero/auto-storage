@@ -27,6 +27,7 @@ func main() {
 
 			for _, message := range parseResult.Messages {
 				codeGen.GenCtorFunction(message)
+				codeGen.GenStoreIterface(message)
 				codeGen.GenStoreStruct(message)
 				codeGen.GenerateGetFunction(message)
 				codeGen.GenerateSetFunction(message)
