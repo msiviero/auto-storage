@@ -4,6 +4,10 @@ build:
 	make clean
 	go build -o build/auto-storage ./src
 
+build-linux:
+	make clean
+	GOOS=linux GOARCH=amd64 go build -o build/auto-storage-linux-amd64 ./src
+
 install:
 	make build
 	sudo cp build/auto-storage /usr/local/bin
