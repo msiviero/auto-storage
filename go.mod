@@ -1,4 +1,4 @@
-module example.com/auto-storage/v2
+module github.com/msiviero/auto-storage/v2
 
 go 1.21.6
 

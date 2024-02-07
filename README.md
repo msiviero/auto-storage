@@ -1,0 +1,1 @@
+A small utility to write persistible structs (with pebble) from proto3 definitions

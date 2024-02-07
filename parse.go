@@ -9,7 +9,7 @@ import (
 	pbparse "github.com/yoheimuta/go-protoparser"
 )
 
-func parseProto(path string) ParseResult {
+func ParseProto(path string) ParseResult {
 	reader, err := os.Open(path)
 	if err != nil {
 		log.Fatalf("failed to open %s, err %v\n", path, err)

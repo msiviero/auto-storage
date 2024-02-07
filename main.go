@@ -20,7 +20,7 @@ func main() {
 	for _, file := range files {
 		isProto := strings.HasSuffix(file.Name(), ".proto")
 		if isProto {
-			parseResult := parseProto(filepath.Join(args.directory, file.Name()))
+			parseResult := ParseProto(filepath.Join(args.directory, file.Name()))
 			chunks := strings.Split(parseResult.Pkg, "/")
 			pkg := chunks[len(chunks)-1]
 			codeGen := NewCodeGen(pkg)

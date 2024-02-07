@@ -2,7 +2,7 @@
 
 build:
 	make clean
-	go build -o build/auto-storage ./src
+	go build -o build/auto-storage .
 
 build-linux:
 	make clean
