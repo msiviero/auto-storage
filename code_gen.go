@@ -165,10 +165,13 @@ func (gen *CodeGen) GenerateListFunction(definition MessageDef) {
 		Params(j.Id("[]").Op("*").Id(definition.Name), j.Error()).
 		Block(
 			j.Id("items").Op(":=").Id("[]").Op("*").Id(definition.Name).Values(),
-			j.Id("iter").Op(":=").Id("store").Dot("db").Dot("NewIter").Call(
+			j.List(
+				j.Id("iter"),
+				j.Err(),
+			).Op(":=").Id("store").Dot("db").Dot("NewIter").Call(
 				j.Op("&").Qual("github.com/cockroachdb/pebble", "IterOptions").Values(),
 			),
-			j.Var().Id("err").Error(),
+			checkAndReturnNilAndError(),
 			j.For(
 				j.Id("iter").Dot("First").Call(),
 				j.Id("iter").Dot("Valid").Call(),
@@ -193,6 +196,39 @@ func (gen *CodeGen) GenerateListFunction(definition MessageDef) {
 }
 
 func (gen *CodeGen) GenerateIterateFunction(definition MessageDef) {
+	storeType := fmt.Sprintf("%sStore", definition.Name)
+	gen.file.Func().
+		Params(j.Id("store").Op("*").Id(storeType)).
+		Id("Iterate").
+		Params(j.Id("fn").Func().Params(j.Op("*").Id(definition.Name))).
+		Params(j.Error()).
+		Block(
+			j.List(
+				j.Id("iter"),
+				j.Err(),
+			).Op(":=").Id("store").Dot("db").Dot("NewIter").Call(
+				j.Op("&").Qual("github.com/cockroachdb/pebble", "IterOptions").Values(),
+			),
+			checkAndReturnError(),
+			j.For(
+				j.Id("iter").Dot("First").Call(),
+				j.Id("iter").Dot("Valid").Call(),
+				j.Id("iter").Dot("Next").Call(),
+			).Block(
+				j.Id("item").Op(":=").Op("&").Id(definition.Name).Values(),
+				j.Err().Op(":=").Qual("google.golang.org/protobuf/proto", "Unmarshal").Call(
+					j.Id("iter").Dot("Value").Call(),
+					j.Id("item"),
+				),
+				checkAndReturnError(),
+				j.Id("fn").Call(j.Id("item")),
+			),
+			j.Return(j.Nil()),
+		).
+		Line()
+}
+
+func (gen *CodeGen) GenerateOneFunction(definition MessageDef) {
 	storeType := fmt.Sprintf("%sStore", definition.Name)
 	gen.file.Func().
 		Params(j.Id("store").Op("*").Id(storeType)).
