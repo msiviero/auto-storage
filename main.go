@@ -34,6 +34,7 @@ func main() {
 				codeGen.GenerateDelFunction(message)
 				codeGen.GenerateListFunction(message)
 				codeGen.GenerateIterateFunction(message)
+				codeGen.GenerateOneFunction(message)
 			}
 			err := codeGen.file.Save(fmt.Sprintf("%s/%s", parseResult.Pkg, strings.ToLower(strings.ReplaceAll(file.Name(), ".proto", "_storage.g.go"))))
 

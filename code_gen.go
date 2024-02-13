@@ -232,13 +232,17 @@ func (gen *CodeGen) GenerateOneFunction(definition MessageDef) {
 	storeType := fmt.Sprintf("%sStore", definition.Name)
 	gen.file.Func().
 		Params(j.Id("store").Op("*").Id(storeType)).
-		Id("Iterate").
-		Params(j.Id("fn").Func().Params(j.Op("*").Id(definition.Name))).
-		Params(j.Error()).
+		Id("One").
+		Params(j.Id("fn").Func().Params(j.Op("*").Id(definition.Name)).Bool()).
+		Params(j.Op("*").Id(definition.Name), j.Error()).
 		Block(
-			j.Id("iter").Op(":=").Id("store").Dot("db").Dot("NewIter").Call(
+			j.List(
+				j.Id("iter"),
+				j.Err(),
+			).Op(":=").Id("store").Dot("db").Dot("NewIter").Call(
 				j.Op("&").Qual("github.com/cockroachdb/pebble", "IterOptions").Values(),
 			),
+			checkAndReturnNilAndError(),
 			j.For(
 				j.Id("iter").Dot("First").Call(),
 				j.Id("iter").Dot("Valid").Call(),
@@ -249,10 +253,15 @@ func (gen *CodeGen) GenerateOneFunction(definition MessageDef) {
 					j.Id("iter").Dot("Value").Call(),
 					j.Id("item"),
 				),
-				checkAndReturnError(),
-				j.Id("fn").Call(j.Id("item")),
+				checkAndReturnNilAndError(),
+
+				j.If(
+					j.Id("fn").Call(j.Id("item")),
+				).Block(
+					j.Return(j.Id("item"), j.Nil()),
+				),
 			),
-			j.Return(j.Nil()),
+			j.Return(j.Nil(), j.Nil()),
 		).
 		Line()
 }
