@@ -15,6 +15,9 @@ install:
 deps:
 	go mod tidy
 
+proto:
+	protoc --go-grpc_out=. --go_out=. --proto_path=./example ./example/*.proto
+
 clean:
 	rm -rf build
 	go clean
