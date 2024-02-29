@@ -84,6 +84,10 @@ func (gen *CodeGen) GenStoreIterface(definition MessageDef) {
 		j.Id("Delete").Params(j.Op("*").Id(definition.Name)).Error(),
 		j.Id("List").Params().Params(j.Op("[]").Op("*").Id(definition.Name), j.Error()),
 		j.Id("Iterate").Params(j.Func().Params(j.Op("*").Id(definition.Name))).Error(),
+		j.Id("One").Params(j.Func().Params(j.Op("*").Id(definition.Name)).Bool()).Params(
+			j.Op("*").Id(definition.Name),
+			j.Error(),
+		),
 	).Line()
 }
 
