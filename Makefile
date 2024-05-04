@@ -2,7 +2,7 @@
 
 build:
 	make clean
-	go build -o build/auto-storage .
+	go build -o build/auto-storage ./src
 
 build-linux:
 	make clean
@@ -17,6 +17,9 @@ deps:
 
 proto:
 	protoc --go-grpc_out=. --go_out=. --proto_path=./example ./example/*.proto
+
+example:
+	go run ./src -d ./example 
 
 clean:
 	rm -rf build
