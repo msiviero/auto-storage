@@ -36,7 +36,13 @@ func main() {
 				codeGen.GenerateIterateFunction(message)
 				codeGen.GenerateOneFunction(message)
 			}
-			err := codeGen.file.Save(fmt.Sprintf("%s/%s", parseResult.Pkg, strings.ToLower(strings.ReplaceAll(file.Name(), ".proto", "_storage.g.go"))))
+			filename := strings.ToLower(strings.ReplaceAll(file.Name(), ".proto", "_storage.g.go"))
+
+			if _, err := os.Stat(parseResult.Pkg); os.IsNotExist(err) {
+				os.Mkdir(parseResult.Pkg, 0755)
+			}
+
+			err := codeGen.file.Save(fmt.Sprintf("%s/%s", parseResult.Pkg, filename))
 
 			if err != nil {
 				log.Fatal(err)
